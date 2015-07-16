@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="language"
+        android:title="@string/pref_title_language"
+        android:defaultValue="-1"
+        android:entries="@array/pref_list_language"
+        android:entryValues="@array/pref_list_language"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+    <CheckBoxPreference
+        android:key="pause_audio"
+        android:title="@string/pref_title_pause_audio"
+        android:summary="@string/pref_description_pause_audio"
+        android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="notifications"
+        android:title="@string/pref_title_notifications"
+        android:summary="@string/pref_description_notifications"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:key="photo_opt_out"
+        android:title="@string/pref_title_photo_opt_out"
+        android:summary="@string/pref_description_photo_opt_out"
+        android:defaultValue="false" />
+
+    <EditTextPreference
+        android:key="example_text"
+        android:title="@string/pref_title_debug_pass"
+        android:defaultValue=""
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+
+
+</PreferenceScreen>

@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">JohnTour</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_title_language">Language</string>
+    <string name="pref_title_pause_audio">Pause Audio on minimize</string>
+    <string name="pref_description_pause_audio">If unchecked, audio will continue playing in the background.</string>
+    <string name="pref_title_notifications">Notifications</string>
+    <string name="pref_description_notifications">Show notifications on arriving at location</string>
+    <string name="pref_title_photo_opt_out">Photo Opt-Out</string>
+    <string name="pref_description_photo_opt_out">Skip prompt to take photo at eack location</string>
+    <string name="pref_title_debug_pass">Debug Password</string>
+
+    <string-array name="pref_list_language">
+        <item>English</item>
+        <item>French</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_gallery">Gallery</string>
+    <string name="title_media">John A Macdonald</string>
+    <string name="title_location">Where to next?</string>
+</resources>
