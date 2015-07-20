@@ -19,4 +19,8 @@
     <string name="title_gallery">Gallery</string>
     <string name="title_media">John A Macdonald</string>
     <string name="title_location">Where to next?</string>
+    <string name="title_activity_logos">John A MacDonald Walking Tour</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="headphones">Headphones Recommended</string>
 </resources>

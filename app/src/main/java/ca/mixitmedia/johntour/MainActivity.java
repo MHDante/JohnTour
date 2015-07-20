@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         fragmentManager = getSupportFragmentManager();
+        mViewPager.setCurrentItem(1);
 
     }
 
@@ -61,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return position == 0? new GalleryFragment():
                     position == 1? new MediaFragment():
                     position == 2? new MapFragment():null;
