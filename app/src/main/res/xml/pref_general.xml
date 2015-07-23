@@ -4,7 +4,7 @@
         android:title="@string/pref_title_language"
         android:defaultValue="-1"
         android:entries="@array/pref_list_language"
-        android:entryValues="@array/pref_list_language"
+        android:entryValues="@array/pref_list_language_codes"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 

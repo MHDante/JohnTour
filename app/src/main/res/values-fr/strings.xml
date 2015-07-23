@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JohnTour</string>
+    <string name="headphones">casque recommandé</string>
+    <string name="hello_world">asd</string>
+    <string name="pref_description_notifications">sfdf</string>
+    <string name="pref_description_pause_audio">zxcqwe</string>
+    <string name="pref_description_photo_opt_out">wer</string>
+    <string name="pref_title_debug_pass">ertert</string>
+    <string name="pref_title_language">fdgdfbcvvb</string>
+    <string name="pref_title_notifications">wergfgvxc</string>
+    <string name="pref_title_pause_audio">wersdfxcv</string>
+    <string name="pref_title_photo_opt_out">werdcvxcv</string>
+    <string name="pref_title_system_sync_settings">wervsdfdsf</string>
+    <string name="title_activity_logos">sdfcxvfrr</string>
+    <string name="title_activity_maps">asdzxce</string>
+    <string name="title_activity_settings">asdzxce</string>
+    <string name="title_gallery">asdxzc</string>
+    <string name="title_location">asdzxc</string>
+    <string name="title_media">qweasdc</string>
+</resources>

@@ -1,11 +1,11 @@
 package ca.mixitmedia.johntour;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -80,7 +80,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mMapView!=null) mMapView.onDestroy();
+        if (mMapView != null) mMapView.onDestroy();
     }
 
     @Override

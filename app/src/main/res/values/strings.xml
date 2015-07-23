@@ -23,4 +23,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="headphones">Headphones Recommended</string>
+    <string name="play_btn">Play</string>
+    <string name="restart_button">Restart</string>
 </resources>

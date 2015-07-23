@@ -3,7 +3,6 @@ package ca.mixitmedia.johntour;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -11,12 +10,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Locale;
+import static ca.mixitmedia.johntour.MainActivity.ChangeDisplayLanguage;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -46,10 +44,10 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public static class LogosFragment extends Fragment {
+        private SplashActivity splashActivity;
+
         public LogosFragment() {
         }
-
-        private SplashActivity splashActivity;
 
         @Override
         public void onAttach(Activity activity) {
@@ -72,10 +70,10 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public static class HeadphonesFragment extends Fragment {
+        private SplashActivity splashActivity;
+
         public HeadphonesFragment() {
         }
-
-        private SplashActivity splashActivity;
 
         @Override
         public void onAttach(Activity activity) {
@@ -100,17 +98,17 @@ public class SplashActivity extends AppCompatActivity {
                     i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(i);
                 }
-            }, 500);
+            }, 2000);
             return inflater.inflate(R.layout.fragment_headphones, container, false);
         }
 
     }
 
     public static class LanguageFragment extends Fragment {
+        private SplashActivity splashActivity;
+
         public LanguageFragment() {
         }
-
-        private SplashActivity splashActivity;
 
         @Override
         public void onAttach(Activity activity) {
@@ -132,15 +130,11 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     String language_code = "EN";
-                    if (v.getId() == R.id.english_button) language_code = "EN";
-                    else if (v.getId() == R.id.french_button) language_code = "FR";
-
-                    Resources res = splashActivity.getResources();
-                    // Change locale settings in the app.
-                    DisplayMetrics dm = res.getDisplayMetrics();
-                    android.content.res.Configuration conf = res.getConfiguration();
-                    conf.locale = new Locale(language_code.toLowerCase());
-                    res.updateConfiguration(conf, dm);
+                    if (v.getId() == R.id.english_button) language_code = "en";
+                    else if (v.getId() == R.id.french_button) language_code = "fr";
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(splashActivity);
+                    prefs.edit().putString("language", language_code).apply();
+                    ChangeDisplayLanguage(language_code, splashActivity);
 
                     FragmentManager manager = splashActivity.getSupportFragmentManager();
                     FragmentTransaction ft = manager.beginTransaction();
@@ -155,6 +149,7 @@ public class SplashActivity extends AppCompatActivity {
 
             return v;
         }
+
 
     }
 

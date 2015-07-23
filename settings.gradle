@@ -1,1 +1,1 @@
-include ':app', ':tourguide_fix'
+include ':app'

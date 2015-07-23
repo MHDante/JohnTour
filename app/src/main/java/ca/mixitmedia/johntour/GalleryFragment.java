@@ -2,7 +2,6 @@ package ca.mixitmedia.johntour;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,7 +16,8 @@ import android.widget.Toast;
 public class GalleryFragment extends Fragment {
     private MainActivity mainActivity;
 
-    public GalleryFragment() {}
+    public GalleryFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,6 +51,12 @@ public class GalleryFragment extends Fragment {
 
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
+        // references to our images
+        private Integer[] mThumbIds = {
+                R.drawable.john, R.drawable.john,
+                R.drawable.john, R.drawable.john,
+                R.drawable.john, R.drawable.john
+        };
 
         public ImageAdapter(Context c) {
             mContext = c;
@@ -84,13 +90,6 @@ public class GalleryFragment extends Fragment {
             imageView.setImageResource(mThumbIds[position]);
             return imageView;
         }
-
-        // references to our images
-        private Integer[] mThumbIds = {
-                R.drawable.john, R.drawable.john,
-                R.drawable.john, R.drawable.john,
-                R.drawable.john, R.drawable.john
-        };
     }
 
 }
