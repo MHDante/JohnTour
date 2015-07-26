@@ -2,7 +2,6 @@ package ca.mixitmedia.johntour;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.media.TimedText;
@@ -22,16 +21,17 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import java.io.Closeable;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MediaFragment extends Fragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnTimedTextListener {
+public class MediaFragment extends Fragment implements MediaPlayer.OnTimedTextListener {
 
     private static final int ControlsDelay = 2000;
     MediaController mediaController;
@@ -42,19 +42,8 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnPreparedLis
     private VideoView videoView;
     private ImageButton playBtn, restartBtn;
     private Handler mHandler = new Handler();
-    private MediaPlayer mediaPlayer;
 
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                int mCurrentPosition = (int) (mediaPlayer.getCurrentPosition() / seekIncrementAmount);
-                seekBar.setProgress(mCurrentPosition);
-            }
-            mHandler.postDelayed(this, 250);
-            videoView.requestLayout();
-        }
-    };
+    private Runnable r;
     private TextView subsBox;
 
     public MediaFragment() {
@@ -68,16 +57,53 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnPreparedLis
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
 
+
                 Uri mediaUri = Uri.parse("android.resource://" + mainActivity.getPackageName() + "/" + R.raw.intro);
-                Uri subsUri = Uri.parse("android.resource://" + mainActivity.getPackageName() + "/" + R.raw.intro_subs);
+                Uri subsUri = Uri.parse("android.resource://" + mainActivity.getPackageName() + "/" + R.raw.subs_intro);
 
                 TourService tourService = ((TourService.TourServiceControl) service).getService();
                 tourService.playSong(mediaUri);
-                tourService.setOnPreparedListener(MediaFragment.this);
-                tourService.mediaPlayer.setDisplay(videoView.getHolder());
-                FileDescriptor fd = getResources().openRawResourceFd(R.raw.intro_subs).getFileDescriptor();
-                tourService.mediaPlayer.addTimedTextSource(fd,MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
-                tourService.mediaPlayer.setOnTimedTextListener(MediaFragment.this);
+                final MediaPlayer mp = tourService.mediaPlayer;
+                mp.setDisplay(videoView.getHolder());
+
+                seekBar.setMax(100);
+                seekIncrementAmount = mp.getDuration() / 100f;
+                r = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mp.isPlaying()) {
+                            int mCurrentPosition = (int) (mp.getCurrentPosition() / seekIncrementAmount);
+                            seekBar.setProgress(mCurrentPosition);
+                        }
+                        mHandler.postDelayed(this, 250);
+                        videoView.requestLayout();
+                    }
+                };
+
+                mainActivity.runOnUiThread(r);
+
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
+
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            mp.seekTo((int) (progress * seekIncrementAmount));
+
+                            Log.d("handler", Integer.toString((int) (progress * seekIncrementAmount)));
+                        }
+                    }
+                });
+
+                mp.setOnTimedTextListener(MediaFragment.this);
+                mp.start();
             }
 
             @Override
@@ -86,6 +112,8 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnPreparedLis
             }
         });
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,24 +150,8 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnPreparedLis
 
     }
 
-    private File copyFile(String filename){
-        File file = new File(mainActivity.getFilesDir(), filename);
-        try {
-            InputStream in = getResources().openRawResource(R.raw.intro_subs);
-            FileOutputStream out = mainActivity.openFileOutput(filename + ".srt", Context.MODE_PRIVATE);
-            byte[] buff = new byte[1024];
-            int read = 0;
-            while ((read = in.read(buff)) > 0) {
-                out.write(buff, 0, read);
-            }
-            in.close();
-            out.close();
-        }
-        catch (IOException e){
-            throw new RuntimeException(e);
-        }
-        return file;
-    }
+
+
 
     @Override
     public void onDetach() {
@@ -149,35 +161,17 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnPreparedLis
     }
 
     @Override
-    public void onPrepared(final MediaPlayer mp) {
-        mediaPlayer = mp;
-        seekBar.setMax(100);
-        seekIncrementAmount = mediaPlayer.getDuration() / 100f;
-        mainActivity.runOnUiThread(r);
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mediaPlayer != null && fromUser) {
-                    mediaPlayer.seekTo((int) (progress * seekIncrementAmount));
-
-                    Log.d("handler", Integer.toString((int) (progress * seekIncrementAmount)));
-                }
-            }
-        });
-    }
-
-    @Override
     public void onTimedText(MediaPlayer mp, TimedText text) {
         subsBox.setText(text.getText());
+        Log.e("HAPPEN","\nAAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!\n" +
+                "AAAAAAH!");
     }
 }

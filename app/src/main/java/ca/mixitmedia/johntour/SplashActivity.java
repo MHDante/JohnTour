@@ -95,6 +95,7 @@ public class SplashActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Intent i = new Intent(splashActivity, MainActivity.class);
+//                    Intent i = new Intent(splashActivity, TestActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(i);
                 }

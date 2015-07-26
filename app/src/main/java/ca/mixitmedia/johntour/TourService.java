@@ -8,11 +8,16 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.Log;
 
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-public class TourService extends IntentService implements
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
+public class TourService extends IntentService implements MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener {
     public MediaPlayer mediaPlayer;
     private boolean prepared;
@@ -35,7 +40,6 @@ public class TourService extends IntentService implements
         mediaPlayer.setWakeMode(getApplicationContext(),
                 PowerManager.PARTIAL_WAKE_LOCK);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
     }
@@ -48,7 +52,8 @@ public class TourService extends IntentService implements
         mediaPlayer.reset();
         try {
             mediaPlayer.setDataSource(getApplicationContext(), uri);
-            mediaPlayer.prepareAsync();
+            mediaPlayer.prepare();
+            AddSubs(mediaPlayer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,17 +77,6 @@ public class TourService extends IntentService implements
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
-        prepared = true;
-        PrepListen.onPrepared(mp);
-        mp.start();
-    }
-
-    public void setOnPreparedListener(MediaPlayer.OnPreparedListener prepListen) {
-        PrepListen = prepListen;
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
@@ -97,4 +91,83 @@ public class TourService extends IntentService implements
             return TourService.this;
         }
     }
+
+
+    void AddSubs(MediaPlayer mediaPlayer) {
+        try {
+            mediaPlayer.addTimedTextSource(getSubtitleFile(R.raw.subs_intro), MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaPlayer.TrackInfo[] t = mediaPlayer.getTrackInfo();
+        int textTrackIndex = findTrackIndexFor(
+                MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT, mediaPlayer.getTrackInfo());
+        if (textTrackIndex >= 0) {
+            mediaPlayer.selectTrack(textTrackIndex);
+        } else {
+            Log.w("Media:", "Cannot find text track!");
+        }
+    }
+
+    private int findTrackIndexFor(int mediaTrackType, MediaPlayer.TrackInfo[] trackInfo) {
+        int index = -1;
+        for (int i = 0; i < trackInfo.length; i++) {
+            if (trackInfo[i].getTrackType() == mediaTrackType) {
+                return i;
+            }
+        }
+        return index;
+    }
+
+    private String getSubtitleFile(int resId) {
+        String fileName = getResources().getResourceEntryName(resId);
+        File subtitleFile = getFileStreamPath(fileName);
+        if (subtitleFile.exists()) {
+            Log.d("Media", "Subtitle already exists");
+            Log.d("Media", subtitleFile.getAbsolutePath()   );
+            return subtitleFile.getAbsolutePath();
+        }
+        Log.d("Media", "Subtitle does not exists, copy it from res/raw");
+
+        // Copy the file from the res/raw folder to your app folder on the
+        // device
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            inputStream = getResources().openRawResource(resId);
+            outputStream = new FileOutputStream(subtitleFile, false);
+            copyFile(inputStream, outputStream);
+            return subtitleFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeStreams(inputStream, outputStream);
+        }
+        return "";
+    }
+    private void closeStreams(Closeable... closeables) {
+        if (closeables != null) {
+            for (Closeable stream : closeables) {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    private void copyFile(InputStream inputStream, OutputStream outputStream)
+            throws IOException {
+        final int BUFFER_SIZE = 1024;
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int length = -1;
+        while ((length = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, length);
+        }
+    }
+
+
 }
