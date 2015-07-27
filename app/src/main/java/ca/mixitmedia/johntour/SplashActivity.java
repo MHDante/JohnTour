@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,30 +18,46 @@ import android.view.ViewGroup;
 import static ca.mixitmedia.johntour.MainActivity.ChangeDisplayLanguage;
 
 public class SplashActivity extends AppCompatActivity {
+    Handler handler = new Handler();
+    Runnable transition = new Runnable() {
+        @Override
+        public void run() {
+            if (!isFirstTime) {
+                Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(i);
+
+            } else {
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction ft = manager.beginTransaction();
+                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                ft.replace(R.id.splash_fragment, new LanguageFragment());
+                ft.commit();
+                transitioned = true;
+            }
+        }
+    };
+    private boolean isFirstTime;
+    private boolean transitioned;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        final boolean isFirstTime = prefs.getBoolean("isFirstTime", true);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFirstTime) {
-                    Intent i = new Intent(SplashActivity.this, MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    startActivity(i);
-                } else {
-                    FragmentManager manager = getSupportFragmentManager();
-                    FragmentTransaction ft = manager.beginTransaction();
-                    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                    ft.replace(R.id.splash_fragment, new LanguageFragment());
-                    ft.commit();
-                }
-            }
-        }, 1500);
+        isFirstTime = prefs.getBoolean("isFirstTime", true);
+        if (!transitioned) handler.postDelayed(transition, 1500);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(transition);
     }
 
     public static class LogosFragment extends Fragment {

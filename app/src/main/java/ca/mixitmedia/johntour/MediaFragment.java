@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -39,16 +40,16 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnTimedTextLi
     private MainActivity mainActivity;
     private float seekIncrementAmount;
     private int fadoutCounter;
-    private VideoView videoView;
+    private SurfaceView videoView;
     private ImageButton playBtn, restartBtn;
     private Handler mHandler = new Handler();
 
     private Runnable r;
-    private TextView subsBox;
+    private SubtitleView subsBox;
 
     public MediaFragment() {
     }
-
+    MediaPlayer mp;
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -61,54 +62,66 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnTimedTextLi
                 Uri mediaUri = Uri.parse("android.resource://" + mainActivity.getPackageName() + "/" + R.raw.intro);
                 Uri subsUri = Uri.parse("android.resource://" + mainActivity.getPackageName() + "/" + R.raw.subs_intro);
 
-                TourService tourService = ((TourService.TourServiceControl) service).getService();
-                tourService.playSong(mediaUri);
-                final MediaPlayer mp = tourService.mediaPlayer;
-                mp.setDisplay(videoView.getHolder());
-
-                seekBar.setMax(100);
-                seekIncrementAmount = mp.getDuration() / 100f;
-                r = new Runnable() {
+                final TourService tourService = ((TourService.TourServiceControl) service).getService();
+                tourService.playSong(mediaUri, new MediaPlayer.OnPreparedListener() {
                     @Override
-                    public void run() {
-                        if (mp.isPlaying()) {
-                            int mCurrentPosition = (int) (mp.getCurrentPosition() / seekIncrementAmount);
-                            seekBar.setProgress(mCurrentPosition);
-                        }
-                        mHandler.postDelayed(this, 250);
+                    public void onPrepared(final MediaPlayer mp) {
+
+                        MediaFragment.this.mp = mp;
+                        mp.setDisplay(videoView.getHolder());
                         videoView.requestLayout();
-                    }
-                };
+                        seekBar.setMax(100);
+                        subsBox.setPlayer(mp);
+                        subsBox.setSubSource(R.raw.subs_intro, MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
+                        playBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(mp.isPlaying()) mp.pause();
 
-                mainActivity.runOnUiThread(r);
+                                else mp.start();
+                            }
+                        });
+                        seekIncrementAmount = mp.getDuration() / 100f;
+                        r = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mp.isPlaying()) {
+                                    int mCurrentPosition = (int) (mp.getCurrentPosition() / seekIncrementAmount);
+                                    seekBar.setProgress(mCurrentPosition);
+                                }
+                                mHandler.postDelayed(this, 250);
 
-                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            }
+                        };
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-                    }
+                        mainActivity.runOnUiThread(r);
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                    }
+                        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if (fromUser) {
-                            mp.seekTo((int) (progress * seekIncrementAmount));
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                            }
 
-                            Log.d("handler", Integer.toString((int) (progress * seekIncrementAmount)));
-                        }
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                            }
+
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (fromUser) {
+                                    mp.seekTo((int) (progress * seekIncrementAmount));
+                                }
+                            }
+                        });
                     }
                 });
 
-                mp.setOnTimedTextListener(MediaFragment.this);
-                mp.start();
+                //mp.start();
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
+                mp.setDisplay(videoView.getHolder());
             }
         });
     }
@@ -120,7 +133,7 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnTimedTextLi
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_media, container, false);
 
-        videoView = (VideoView) v.findViewById(R.id.video_view);
+        videoView = (SurfaceView) v.findViewById(R.id.video_view);
 
         mediaController = new MediaController(mainActivity, false);
 
@@ -142,7 +155,7 @@ public class MediaFragment extends Fragment implements MediaPlayer.OnTimedTextLi
         seekBar = (SeekBar) v.findViewById(R.id.seek_bar);
         playBtn = (ImageButton) v.findViewById(R.id.play_pause_button);
         restartBtn = (ImageButton) v.findViewById(R.id.restart_button);
-        subsBox = (TextView) v.findViewById(R.id.subtitle_box);
+        subsBox = (SubtitleView) v.findViewById(R.id.subtitle_box);
         return v;
     }
 

@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     static void ChangeDisplayLanguage(String language_code, Context context) {
 
         String old_lang = context.getResources().getConfiguration().locale.getLanguage();
-        Log.e("OldLang", old_lang);
         if (language_code.equals(old_lang)) return;
         Resources res = context.getResources();
         // Change locale settings in the app.
@@ -70,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         android.content.res.Configuration conf = res.getConfiguration();
         conf.locale = new Locale(language_code.toLowerCase());
         res.updateConfiguration(conf, dm);
-
-        Log.e("NewLang", language_code);
     }
 
     @Override
