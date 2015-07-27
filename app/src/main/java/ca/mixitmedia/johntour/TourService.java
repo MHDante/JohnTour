@@ -11,16 +11,10 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.TextView;
 
-public class TourService extends IntentService implements MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener {
+public class TourService extends IntentService {
     private static final String TAG = "TourService";
-    private boolean prepared;
-    private OnPreparedListener PrepListen;
     private TourServiceControl mBinder = new TourServiceControl();
-
-    private TextView txtDisplay;
-    private static Handler handler = new Handler();
-    MediaPlayer player;
+    private MediaPlayer player;
 
     public TourService() {
         super("TourService");
@@ -32,15 +26,12 @@ public class TourService extends IntentService implements MediaPlayer.OnErrorLis
     }
 
 
-    public void playSong(Uri uri, final OnPreparedListener OPL) {
+    public void playSong(int resId, final OnPreparedListener OPL) {
+        Uri mediaUri = Uri.parse("android.resource://" + getPackageName() + "/" + resId);
         if(player != null) {player.release();}
         player = new MediaPlayer();
-        player.setOnErrorListener(this);
-         //MediaPlayer.create(this, R.raw.intro);
-
-
         try {
-            player.setDataSource(this,uri);
+            player.setDataSource(this,mediaUri);
             player.setOnPreparedListener(OPL);
             player.prepare();
 
@@ -51,35 +42,14 @@ public class TourService extends IntentService implements MediaPlayer.OnErrorLis
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        //player.stop();
-        //player.release();
-        return false;
-    }
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-
-
-        Log.e(TAG, "wtf");
-        return false;
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
+        //no-op
     }
-
 
     public class TourServiceControl extends Binder {
         TourService getService() {

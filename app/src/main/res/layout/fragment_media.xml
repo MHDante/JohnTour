@@ -38,7 +38,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:src="@android:drawable/ic_media_previous" />
 
-            <ImageButton
+            <view class="ca.mixitmedia.johntour.MediaUtils$PlayPauseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/play_btn"
@@ -48,14 +48,14 @@
         </LinearLayout>
     </FrameLayout>
 
-    <SeekBar
+    <view class="ca.mixitmedia.johntour.MediaUtils$MediaSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/seek_bar"
         android:layout_gravity="center_horizontal|bottom"
         android:indeterminate="false" />
 
-    <ca.mixitmedia.johntour.SubtitleView
+    <view class="ca.mixitmedia.johntour.MediaUtils$SubtitleView"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:text="Subtitles go Here"
