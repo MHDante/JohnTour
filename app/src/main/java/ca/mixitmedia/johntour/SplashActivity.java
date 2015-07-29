@@ -33,8 +33,8 @@ public class SplashActivity extends AppCompatActivity {
                 ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                 ft.replace(R.id.splash_fragment, new LanguageFragment());
                 ft.commit();
-                transitioned = true;
             }
+            transitioned = true;
         }
     };
     private boolean isFirstTime;
@@ -88,7 +88,15 @@ public class SplashActivity extends AppCompatActivity {
 
     public static class HeadphonesFragment extends Fragment {
         private SplashActivity splashActivity;
-
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(splashActivity, MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(i);
+            }
+        };
         public HeadphonesFragment() {
         }
 
@@ -107,19 +115,9 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(splashActivity, MainActivity.class);
-//                    Intent i = new Intent(splashActivity, TestActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    startActivity(i);
-                }
-            }, 2000);
+
             return inflater.inflate(R.layout.fragment_headphones, container, false);
         }
-
     }
 
     public static class LanguageFragment extends Fragment {
@@ -151,9 +149,16 @@ public class SplashActivity extends AppCompatActivity {
                     if (v.getId() == R.id.english_button) language_code = "en";
                     else if (v.getId() == R.id.french_button) language_code = "fr";
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(splashActivity);
-                    prefs.edit().putString("language", language_code).apply();
-                    ChangeDisplayLanguage(language_code, splashActivity);
+                    prefs.edit()
+                            .putString("language", language_code)
+                            //.putBoolean("isFirstTime", false)
+                            .apply();
 
+
+                    ChangeDisplayLanguage(language_code, splashActivity);
+                    splashActivity.isFirstTime = false;
+                    splashActivity.transitioned = false;
+                    splashActivity.handler.postDelayed(splashActivity.transition, 2000);
                     FragmentManager manager = splashActivity.getSupportFragmentManager();
                     FragmentTransaction ft = manager.beginTransaction();
                     ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);

@@ -11,29 +11,24 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.TextView;
 
-public class TourService extends IntentService {
+public class TourService extends IntentService implements MediaPlayer.OnErrorListener {
     private static final String TAG = "TourService";
     private TourServiceControl mBinder = new TourServiceControl();
-    private MediaPlayer player;
+    MediaPlayer player;
 
     public TourService() {
         super("TourService");
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-
     public void playSong(int resId, final OnPreparedListener OPL) {
         Uri mediaUri = Uri.parse("android.resource://" + getPackageName() + "/" + resId);
-        if(player != null) {player.release();}
-        player = new MediaPlayer();
         try {
+            if (player!=null) player.release();
+            player = new MediaPlayer();
+            player.setOnErrorListener(this);
             player.setDataSource(this,mediaUri);
             player.setOnPreparedListener(OPL);
-            player.prepare();
+            player.prepareAsync();
 
 
         } catch (Exception e) {
@@ -47,8 +42,21 @@ public class TourService extends IntentService {
     }
 
     @Override
+    public boolean onUnbind(Intent intent) {
+        if (!player.isPlaying()) stopSelf();
+        return super.onUnbind(intent);
+
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
         //no-op
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.e(TAG, "onError "+what + " , " + extra);
+        return false;
     }
 
     public class TourServiceControl extends Binder {

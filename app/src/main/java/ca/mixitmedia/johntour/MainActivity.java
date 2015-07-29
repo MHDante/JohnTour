@@ -1,5 +1,6 @@
 package ca.mixitmedia.johntour;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import java.util.Locale;
 import ca.mixitmedia.johntour.TourService.TourServiceControl;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "Main";
     public static FragmentManager fragmentManager;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
@@ -89,12 +91,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (playIntent == null) {
-            playIntent = new Intent(this, TourService.class);
-            startService(playIntent);
-            bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-        }
+        getApplicationContext().bindService(new Intent(getApplicationContext(), TourService.class), serviceConnection, BIND_AUTO_CREATE);
+//
+//        if (playIntent == null) {
+//            playIntent = new Intent(this, TourService.class);
+//            if (!isMyServiceRunning(TourService.class)) startService(playIntent);
+//            bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+//
+//        }
     }
 
     @Override
@@ -119,16 +123,7 @@ public class MainActivity extends AppCompatActivity {
     public void setOnServiceConnection(ServiceConnection onServiceConnection) {
         this.onServiceConnection = onServiceConnection;
     }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
 
-        if (serviceConnection != null) {
-            unbindService(serviceConnection);
-        }
-
-
-    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -168,4 +163,33 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG, "onPause ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG, "onStop ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy ");
+    }
+
+
 }

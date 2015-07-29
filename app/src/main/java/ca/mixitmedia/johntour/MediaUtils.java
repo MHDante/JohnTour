@@ -1,9 +1,15 @@
 package ca.mixitmedia.johntour;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -24,9 +30,12 @@ public class MediaUtils {
 
 
     private static final int UPDATE_INTERVAL = 300;
+    private static final String TAG = "MediaUtils";
 
 
     public static class FadingMediaControls extends LinearLayout implements Runnable{
+
+        private static final int FADE_DURATION = 500;
 
         public FadingMediaControls(Context context) {
             super(context);
@@ -40,9 +49,77 @@ public class MediaUtils {
             super(context, attrs, defStyleAttr);
         }
 
+        private MediaPlayer player;
+        private ViewPropertyAnimator animator;
         @Override
         public void run() {
+            if(player!=null && player.isPlaying()){
+                hideControls();
+            }
+            postDelayed(this, UPDATE_INTERVAL);
 
+        }
+
+        public void setPlayer(MediaPlayer mp) {
+            this.player = mp;
+        }
+
+        private void hideControls(){
+            animator = this.animate()
+                    .alpha(0f)
+                    .setDuration(FADE_DURATION)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            FadingMediaControls.this.setVisibility(View.GONE);
+                            animator = null;
+                        }
+                    });
+        }
+        private void showControls(){
+            if (animator!= null) {
+                animator.cancel();
+                setAlpha(1f);
+            } else if (this.getAlpha() != 1f) {
+                FadingMediaControls.this.setVisibility(View.VISIBLE);
+                animator = this.animate()
+                        .alpha(1f)
+                        .setDuration(FADE_DURATION)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                animator = null;
+                            }
+                        });
+            }
+        }
+
+//        @Override
+//        public boolean onInterceptTouchEvent(MotionEvent ev) {
+//            int action = MotionEventCompat.getActionMasked(ev);
+
+//            if (action == MotionEvent.ACTION_DOWN) {
+//                showControls();
+//            }
+//            return false;
+//        }
+
+        @Override
+        protected void onAttachedToWindow() {
+            super.onAttachedToWindow();
+            postDelayed(this, UPDATE_INTERVAL);
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showControls();
+                }
+            });
+        }
+
+        @Override
+        protected void onDetachedFromWindow() {
+            super.onDetachedFromWindow();
+            removeCallbacks(this);
         }
     }
     public static class PlayPauseButton extends ImageButton implements Runnable{
@@ -65,6 +142,7 @@ public class MediaUtils {
 
         public void setPlayer(MediaPlayer mp) {
             this.player = mp;
+            if (player == null) {setOnClickListener(null); return;}
             setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

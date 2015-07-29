@@ -23,11 +23,12 @@
             android:id="@+id/video_view"
             android:layout_gravity="center" />
 
-        <LinearLayout
+        <view class="ca.mixitmedia.johntour.MediaUtils$FadingMediaControls"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:id="@+id/fmc"
             style="?android:attr/buttonBarStyle">
 
             <ImageButton
@@ -45,7 +46,7 @@
                 android:id="@+id/play_pause_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:src="@android:drawable/ic_media_play" />
-        </LinearLayout>
+        </view>
     </FrameLayout>
 
     <view class="ca.mixitmedia.johntour.MediaUtils$MediaSeekBar"
