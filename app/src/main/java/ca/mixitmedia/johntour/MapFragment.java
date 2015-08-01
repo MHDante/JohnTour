@@ -45,16 +45,26 @@ public class MapFragment extends Fragment {
         double latitude = 43.6607654;
         double longitude = -79.3908459;
 
+
+        for (SequencePoint s:
+             SequencePoint.list) {
+            if(s.getCoordinates() == null) continue;
+            MarkerOptions marker = new MarkerOptions()
+                    .position(s.getCoordinates())
+                    .title(getString(s.getNameResID()));
+
+            if (s!= SeqManager.getCurrentSeqPt()) marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.measle));
+
+            // adding marker
+            googleMap.addMarker(marker);
+        }
         // create marker
-        MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("John A. Macdonald");
 
-        // Changing marker icon
-        marker.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
 
-        // adding marker
-        googleMap.addMarker(marker);
+
+
+
+
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude)).zoom(13).build();
 

@@ -56,7 +56,7 @@ public class GalleryFragment extends Fragment {
         }
 
         public int getCount() {
-            return SequencePoint.list.subList(0,SeqManager.getInstance().currentPt()).size();
+            return SequencePoint.list.subList(0,SeqManager.getInstance().getCurrentSeqPtNum()).size();
         }
 
         public Object getItem(int position) {

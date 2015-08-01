@@ -11,12 +11,12 @@ public class SeqManager {
     }
 
     public static SequencePoint getCurrentSeqPt(){
-        return SequencePoint.list.get(SeqManager.getInstance().currentPt());
+        return SequencePoint.list.get(SeqManager.getInstance().getCurrentSeqPtNum());
     }
     private SeqManager() {
     }
 
-    public int currentPt() {
-        return 0;
+    public int getCurrentSeqPtNum() {
+        return 5;
     }
 }
