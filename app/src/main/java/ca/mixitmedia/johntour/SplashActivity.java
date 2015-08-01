@@ -26,6 +26,7 @@ public class SplashActivity extends AppCompatActivity {
                 Intent i = new Intent(SplashActivity.this, MainActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
+                finish();
 
             } else {
                 FragmentManager manager = getSupportFragmentManager();
@@ -43,7 +44,12 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        if( MainActivity.isMyServiceRunning(TourService.class, this)){
+            Intent i = new Intent(SplashActivity.this, MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(i);
+            finish();
+        } else setContentView(R.layout.activity_splash);
     }
 
     @Override

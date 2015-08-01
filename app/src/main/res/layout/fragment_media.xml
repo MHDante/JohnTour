@@ -23,13 +23,14 @@
             android:id="@+id/video_view"
             android:layout_gravity="center" />
 
-        <view class="ca.mixitmedia.johntour.MediaUtils$FadingMediaControls"
+        <view class="ca.mixitmedia.johntour.MediaUtilViews$FadingMediaControls"
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_gravity="center"
             android:id="@+id/fmc"
-            style="?android:attr/buttonBarStyle">
+            style="?android:attr/buttonBarStyle"
+            android:gravity="center_vertical|center_horizontal">
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -39,7 +40,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:src="@android:drawable/ic_media_previous" />
 
-            <view class="ca.mixitmedia.johntour.MediaUtils$PlayPauseButton"
+            <view class="ca.mixitmedia.johntour.MediaUtilViews$PlayPauseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/play_btn"
@@ -49,14 +50,14 @@
         </view>
     </FrameLayout>
 
-    <view class="ca.mixitmedia.johntour.MediaUtils$MediaSeekBar"
+    <view class="ca.mixitmedia.johntour.MediaUtilViews$MediaSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/seek_bar"
         android:layout_gravity="center_horizontal|bottom"
         android:indeterminate="false" />
 
-    <view class="ca.mixitmedia.johntour.MediaUtils$SubtitleView"
+    <view class="ca.mixitmedia.johntour.MediaUtilViews$SubtitleView"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:text="Subtitles go Here"

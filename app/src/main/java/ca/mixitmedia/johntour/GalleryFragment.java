@@ -51,19 +51,12 @@ public class GalleryFragment extends Fragment {
 
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
-        // references to our images
-        private Integer[] mThumbIds = {
-                R.drawable.john, R.drawable.john,
-                R.drawable.john, R.drawable.john,
-                R.drawable.john, R.drawable.john
-        };
-
         public ImageAdapter(Context c) {
             mContext = c;
         }
 
         public int getCount() {
-            return mThumbIds.length;
+            return SequencePoint.list.subList(0,SeqManager.getInstance().currentPt()).size();
         }
 
         public Object getItem(int position) {
@@ -87,7 +80,7 @@ public class GalleryFragment extends Fragment {
                 imageView = (ImageView) convertView;
             }
 
-            imageView.setImageResource(mThumbIds[position]);
+            imageView.setImageResource(SequencePoint.list.get(position).getBannerResID());
             return imageView;
         }
     }

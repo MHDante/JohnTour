@@ -26,14 +26,13 @@ import java.util.Locale;
 
 import ca.mixitmedia.johntour.TourService.TourServiceControl;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IServiceable {
     private static final String TAG = "Main";
     public static FragmentManager fragmentManager;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
     TourService tourService;
     private Intent playIntent;
-    private boolean serviceBound = false;
     private ServiceConnection onServiceConnection;
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
@@ -50,13 +49,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 100);
 
-            //pass list
-            serviceBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            serviceBound = false;
             onServiceConnection.onServiceDisconnected(name);
         }
     };
@@ -92,13 +88,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         getApplicationContext().bindService(new Intent(getApplicationContext(), TourService.class), serviceConnection, BIND_AUTO_CREATE);
-//
-//        if (playIntent == null) {
-//            playIntent = new Intent(this, TourService.class);
-//            if (!isMyServiceRunning(TourService.class)) startService(playIntent);
-//            bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-//
-//        }
     }
 
     @Override
@@ -139,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             return position == 0 ? new GalleryFragment() :
-                    position == 1 ? new MediaFragment() :
+                    position == 1 ? MediaFragment.newInstance(false,0):
                             position == 2 ? new MapFragment() : null;
         }
 
@@ -163,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    static boolean isMyServiceRunning(Class<?> serviceClass, Context contest) {
+        ActivityManager manager = (ActivityManager) contest.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;

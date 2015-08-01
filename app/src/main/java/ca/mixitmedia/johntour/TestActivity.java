@@ -29,9 +29,9 @@ public class TestActivity extends Activity implements MediaPlayer.OnTimedTextLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         txtDisplay = (TextView) findViewById(R.id.testbox);
-        MediaPlayer player = MediaPlayer.create(this, R.raw.intro);
+        MediaPlayer player = MediaPlayer.create(this, R.raw.audio_placeholder);
         try {
-            player.addTimedTextSource(getSubtitleFile(R.raw.subs_intro),
+            player.addTimedTextSource(getSubtitleFile(R.raw.subs_audio_intro),
                     MediaPlayer.MEDIA_MIMETYPE_TEXT_SUBRIP);
             int textTrackIndex = findTrackIndexFor(
                     MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT, player.getTrackInfo());
