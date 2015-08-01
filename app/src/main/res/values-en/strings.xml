@@ -3,4 +3,8 @@
     <string name="app_name">JohnTour</string>
     <string name="headphones">Headphones Recommended</string>
     <string name="JohnAMacStatue">JohnAMacStatue</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="loc1Title">John A Statue</string>
+    <string name="LocNativeRelationsTitle">TEST TO DELETE</string>
+    <string name="locNativeRelationsTitle">John A and Natives</string>
 </resources>

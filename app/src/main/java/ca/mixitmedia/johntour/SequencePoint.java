@@ -58,127 +58,141 @@ public class SequencePoint {
     static {
 
         list = new ArrayList<>();
-
+        int counter = 0;
+        SequencePoint s;
         //Intro
-        SequencePoint s0 = new SequencePoint();
-        s0.id = 0;
-        s0.nameResID = R.string.introTitle;
-        s0.coordinates = null;
-        s0.bannerResID = R.drawable.intro;
-        s0.audioResID = R.raw.audio_placeholder;// TODO: R.raw.audio_intro;
-        s0.audioSubsResID = R.raw.subs_audio_intro;
-        s0.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc1;
-        s0.videoSubsResID = R.raw.subs_video_intro;
-        list.add(s0);
+        s = new SequencePoint();
+        s.id = counter++;//counter++;
+        s.nameResID = R.string.introTitle;
+        s.coordinates = null;
+        s.bannerResID = R.drawable.intro;
+        s.audioResID = R.raw.audio_placeholder;// TODO: R.raw.audio_intro;
+        s.audioSubsResID = R.raw.subs_audio_intro;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc1;
+        s.videoSubsResID = R.raw.subs_video_intro;
+        list.add(s);
 
         //Statue
-        SequencePoint s1 = new SequencePoint();
-        s1.id = 1;
-        s1.nameResID = R.string.loc1Title;
-        s1.coordinates = new LatLng(43.6607, -79.3909);
-        s1.bannerResID = R.drawable.loc1;
-        s1.audioResID = R.raw.audio_loc1;
-        s1.audioSubsResID = R.raw.subs_audio_loc1;
-        s1.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc1;
-        s1.videoSubsResID = R.raw.subs_video_loc1;
-        list.add(s1);
+        s = new SequencePoint();
+        s.id = counter++;//1;
+        s.nameResID = R.string.loc1Title;
+        s.coordinates = new LatLng(43.6607, -79.3909);
+        s.bannerResID = R.drawable.loc1;
+        s.audioResID = R.raw.audio_loc1;
+        s.audioSubsResID = R.raw.subs_audio_loc1;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc1;
+        s.videoSubsResID = R.raw.subs_video_loc1;
+        list.add(s);
 
         //EmilyStowe Hospital
-        SequencePoint s2 = new SequencePoint();
-        s2.id = 2;
-        s2.nameResID = R.string.loc2Title;
-        s2.coordinates = new LatLng(43.66055, -79.38745);
-        s2.bannerResID = R.drawable.loc2;
-        s2.audioResID = R.raw.audio_loc2;
-        s2.audioSubsResID = R.raw.subs_audio_loc2;
-        s2.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc2;
-        s2.videoSubsResID = R.raw.subs_video_loc2;
-        list.add(s2);
+        s = new SequencePoint();
+        s.id = counter++;//2;
+        s.nameResID = R.string.loc2Title;
+        s.coordinates = new LatLng(43.66055, -79.38745);
+        s.bannerResID = R.drawable.loc2;
+        s.audioResID = R.raw.audio_loc2;
+        s.audioSubsResID = R.raw.subs_audio_loc2;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc2;
+        s.videoSubsResID = R.raw.subs_video_loc2;
+        list.add(s);
 
         //printer's strike
-        SequencePoint s3 = new SequencePoint();
-        s3.id = 3;
-        s3.nameResID = R.string.loc3Title;
-        s3.coordinates = new LatLng(43.66178, -79.38983);
-        s3.bannerResID = R.drawable.loc3;
-        s3.audioResID = R.raw.audio_loc3;
-        s3.audioSubsResID = R.raw.subs_audio_loc3;
-        s3.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc3;
-        s3.videoSubsResID = R.raw.subs_video_loc3;
-        list.add(s3);
+        s = new SequencePoint();
+        s.id = counter++;//3;
+        s.nameResID = R.string.loc3Title;
+        s.coordinates = new LatLng(43.66178, -79.38983);
+        s.bannerResID = R.drawable.loc3;
+        s.audioResID = R.raw.audio_loc3;
+        s.audioSubsResID = R.raw.subs_audio_loc3;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc3;
+        s.videoSubsResID = R.raw.subs_video_loc3;
+        list.add(s);
 
         //King's College, University
-        SequencePoint s4 = new SequencePoint();
-        s4.id = 4;
-        s4.nameResID = R.string.loc4Title;
-        s4.coordinates = new LatLng(43.66111, -79.39433);
-        s4.bannerResID = R.drawable.loc4;
-        s4.audioResID = R.raw.audio_loc4;
-        s4.audioSubsResID = R.raw.subs_audio_loc4;
-        s4.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc4;
-        s4.videoSubsResID = R.raw.subs_video_loc4;
-        list.add(s4);
+        s = new SequencePoint();
+        s.id = counter++;//4;
+        s.nameResID = R.string.loc4Title;
+        s.coordinates = new LatLng(43.66111, -79.39433);
+        s.bannerResID = R.drawable.loc4;
+        s.audioResID = R.raw.audio_loc4;
+        s.audioSubsResID = R.raw.subs_audio_loc4;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc4;
+        s.videoSubsResID = R.raw.subs_video_loc4;
+        list.add(s);
 
 
         //Macdonald/Mowat house
-        SequencePoint s5 = new SequencePoint();
-        s5.id = 5;
-        s5.nameResID = R.string.loc5Title;
-        s5.coordinates = new LatLng(43.66157, -79.39735);
-        s5.bannerResID = R.drawable.loc5;
-        s5.audioResID = R.raw.audio_loc5;
-        s5.audioSubsResID = R.raw.subs_audio_loc5;
-        s5.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc5;
-        s5.videoSubsResID = R.raw.subs_video_loc5;
-        list.add(s5);
+        s = new SequencePoint();
+        s.id = counter++;//5;
+        s.nameResID = R.string.loc5Title;
+        s.coordinates = new LatLng(43.66157, -79.39735);
+        s.bannerResID = R.drawable.loc5;
+        s.audioResID = R.raw.audio_loc5;
+        s.audioSubsResID = R.raw.subs_audio_loc5;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc5;
+        s.videoSubsResID = R.raw.subs_video_loc5;
+        list.add(s);
 
         //George Brown House
-        SequencePoint s6 = new SequencePoint();
-        s6.id = 6;
-        s6.nameResID = R.string.loc6Title;
-        s6.coordinates = new LatLng(43.65848, -79.39569);
-        s6.bannerResID = R.drawable.loc6;
-        s6.audioResID = R.raw.audio_loc6;
-        s6.audioSubsResID = R.raw.subs_audio_loc6;
-        s6.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc6;
-        s6.videoSubsResID = R.raw.subs_video_loc6;
-        list.add(s6);
+        s = new SequencePoint();
+        s.id = counter++;//6;
+        s.nameResID = R.string.loc6Title;
+        s.coordinates = new LatLng(43.65848, -79.39569);
+        s.bannerResID = R.drawable.loc6;
+        s.audioResID = R.raw.audio_loc6;
+        s.audioSubsResID = R.raw.subs_audio_loc6;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc6;
+        s.videoSubsResID = R.raw.subs_video_loc6;
+        list.add(s);
 
         //Mackenzie @ 147 Beverly St.
-        SequencePoint s7 = new SequencePoint();
-        s7.id = 7;
-        s7.nameResID = R.string.loc7Title;
-        s7.coordinates = new LatLng(43.65453, -79.39411);
-        s7.bannerResID = R.drawable.loc7;
-        s7.audioResID = R.raw.audio_loc7;
-        s7.audioSubsResID = R.raw.subs_audio_loc7;
-        s7.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc7;
-        s7.videoSubsResID = R.raw.subs_video_loc7;
-        list.add(s7);
+        s = new SequencePoint();
+        s.id = counter++;//7;
+        s.nameResID = R.string.loc7Title;
+        s.coordinates = new LatLng(43.65453, -79.39411);
+        s.bannerResID = R.drawable.loc7;
+        s.audioResID = R.raw.audio_loc7;
+        s.audioSubsResID = R.raw.subs_audio_loc7;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc7;
+        s.videoSubsResID = R.raw.subs_video_loc7;
+        list.add(s);
 
         //Baldwin Ave (Minorities)
-        SequencePoint s8 = new SequencePoint();
-        s8.id = 8;
-        s8.nameResID = R.string.loc8Title;
-        s8.coordinates = new LatLng(43.65689, -79.39252);
-        s8.bannerResID = R.drawable.loc8;
-        s8.audioResID = R.raw.audio_placeholder;// TODO: R.raw.audio_loc8;
-        s8.audioSubsResID = R.raw.subs_audio_loc8;
-        s8.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc8;
-        s8.videoSubsResID = R.raw.subs_video_loc8;
-        list.add(s8);
+        s = new SequencePoint();
+        s.id = counter++;//8;
+        s.nameResID = R.string.loc8Title;
+        s.coordinates = new LatLng(43.65689, -79.39252);
+        s.bannerResID = R.drawable.loc8;
+        s.audioResID = R.raw.audio_placeholder;// TODO: R.raw.audio_loc8;
+        s.audioSubsResID = R.raw.subs_audio_loc8;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc8;
+        s.videoSubsResID = R.raw.subs_video_loc8;
+        list.add(s);
+
+        //New Sequence Point Kwame Added (Minorities)
+        s = new SequencePoint();
+        s.id = counter++;
+        s.nameResID = R.string.locNativeRelationsTitle;
+        s.coordinates = new LatLng(43.65626, -79.39227);
+        s.bannerResID = R.drawable.native_relations;
+        s.audioResID = R.raw.audio_loc6;// TODO: R.raw.audio_loc8;
+        s.audioSubsResID = R.raw.subs_audio_loc6;
+        s.videoResID = R.raw.patrice_lookalike;// TODO: R.raw.video_loc8;
+        s.videoSubsResID = R.raw.subs_video_patricelookalike;
+        list.add(s);
+
 
         //Back to the Statue
-        SequencePoint s9 = new SequencePoint();
-        s9.id = 9;
-        s9.nameResID = R.string.loc9Title;
-        s9.coordinates = new LatLng(43.6607, -79.3909);
-        s9.bannerResID = R.drawable.loc9;
-        s9.audioResID = R.raw.audio_placeholder;// TODO: R.raw.audio_loc9;
-        s9.audioSubsResID = R.raw.subs_audio_loc9;
-        s9.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc9;
-        s9.videoSubsResID = R.raw.subs_video_loc9;
-        list.add(s9);
+        s = new SequencePoint();
+        s.id = counter++;//9;
+        s.nameResID = R.string.loc9Title;
+        s.coordinates = new LatLng(43.6607, -79.3909);
+        s.bannerResID = R.drawable.loc9;
+        s.audioResID = R.raw.audio_placeholder;// TODO: R.raw.audio_loc9;
+        s.audioSubsResID = R.raw.subs_audio_loc9;
+        s.videoResID = R.raw.video_placeholder;// TODO: R.raw.video_loc9;
+        s.videoSubsResID = R.raw.subs_video_loc9;
+        list.add(s);
 
     }
 

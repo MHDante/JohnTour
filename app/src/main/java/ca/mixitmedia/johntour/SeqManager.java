@@ -17,6 +17,6 @@ public class SeqManager {
     }
 
     public int getCurrentSeqPtNum() {
-        return 5;
+        return 9;
     }
 }

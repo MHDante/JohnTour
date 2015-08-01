@@ -27,7 +27,7 @@
     <string name="restart_button">Restart</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_gallery_detail">GalleryDetailActivity</string>
-    <string name="loc1Title" />
+    <string name="loc1Title" >John A Statue</string>
     <string name="introTitle" />
     <string name="loc2Title" />
     <string name="loc3Title" />
@@ -38,4 +38,6 @@
     <string name="loc8Title" />
     <string name="loc9Title" />
     <string name="title_activity_main" />
+    <string name="LocNativeRelationsTitle" />
+    <string name="locNativeRelationsTitle" />
 </resources>
