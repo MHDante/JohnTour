@@ -9,7 +9,7 @@
     android:horizontalSpacing="10dp"
     android:stretchMode="columnWidth"
     android:gravity="center"
-    tools:context="ca.mixitmedia.johntour.GalleryFragment">
+    tools:context="ca.mixitmedia.johntour.GalleryMasterFragment">
 
 </GridView>
 

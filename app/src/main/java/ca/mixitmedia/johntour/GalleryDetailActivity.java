@@ -1,6 +1,7 @@
 package ca.mixitmedia.johntour;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
@@ -9,64 +10,58 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class GalleryDetailActivity extends AppCompatActivity implements IServiceable{
+public class GalleryDetailActivity extends AppCompatActivity{
 
+    public static final String ITEM_ID = "itemId";
+    public int seqID;
+    MediaFragment mediaFragment;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery_detail);
+        // If not already added to the Fragment manager add it. If you don't do this a new Fragment will be added every time this method is called (Such as on orientation change)
+        mediaFragment = MediaFragment.newInstance(true, seqID);
+        seqID = getIntent().getIntExtra(ITEM_ID, 0);
+        if(savedInstanceState == null)
+            getSupportFragmentManager().beginTransaction().add(android.R.id.content, mediaFragment).commit();
+
     }
-    private ServiceConnection onServiceConnection;
-    private TourService tourService;
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(final ComponentName name, final IBinder service) {
             TourService.TourServiceControl binder = (TourService.TourServiceControl) service;
             //get service
-            tourService = binder.getService();
-            if(onServiceConnection!= null) onServiceConnection.onServiceConnected(name, service);
+            if(mediaFragment!= null) mediaFragment.onServiceConnected(name, service);
             else new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    onServiceConnection.onServiceConnected(name, service);
+                    mediaFragment.onServiceConnected(name, service);
                 }
             }, 100);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            onServiceConnection.onServiceDisconnected(name);
+            mediaFragment.onServiceDisconnected(name);
         }
     };
 
-    public void setOnServiceConnection(ServiceConnection onServiceConnection) {
-        this.onServiceConnection = onServiceConnection;
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.deleteme, menu);
+        getMenuInflater().inflate(R.menu.menu_gallery, menu);
         return true;
     }
 
     @Override
     protected void onStart() {
+        getApplicationContext().bindService(new Intent(getApplicationContext(), TourService.class), serviceConnection, BIND_AUTO_CREATE);
         super.onStart();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 }

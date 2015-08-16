@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -26,14 +25,17 @@ import java.util.Locale;
 
 import ca.mixitmedia.johntour.TourService.TourServiceControl;
 
-public class MainActivity extends AppCompatActivity implements IServiceable {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main";
     public static FragmentManager fragmentManager;
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
     TourService tourService;
+    MediaFragment mediaFragment;
+    GalleryMasterFragment galleryFragment;
+    MapFragment mapFragment;
+
     private Intent playIntent;
-    private ServiceConnection onServiceConnection;
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -41,19 +43,28 @@ public class MainActivity extends AppCompatActivity implements IServiceable {
             TourServiceControl binder = (TourServiceControl) service;
             //get service
             tourService = binder.getService();
-            if(onServiceConnection!= null) onServiceConnection.onServiceConnected(name, service);
+            if(mediaFragment!= null) mediaFragment.onServiceConnected(name, service);
             else new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    onServiceConnection.onServiceConnected(name, service);
+                    mediaFragment.onServiceConnected(name, service);
                 }
             }, 100);
+
+//            if(galleryFragment!= null) galleryFragment.onServiceConnected(name, service);
+//            else new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    galleryFragment.onServiceConnected(name, service);
+//                }
+//            }, 100);
 
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            onServiceConnection.onServiceDisconnected(name);
+            mediaFragment.onServiceDisconnected(name);
+//            galleryFragment.onServiceDisconnected(name);
         }
     };
 
@@ -76,6 +87,15 @@ public class MainActivity extends AppCompatActivity implements IServiceable {
         String lang_code = prefs.getString("language", null);
         ChangeDisplayLanguage(lang_code, this);
         setContentView(R.layout.activity_main);
+
+
+        mediaFragment =  MediaFragment.newInstance(false, 0);
+        galleryFragment = new GalleryMasterFragment();
+        mapFragment = new MapFragment();
+
+
+
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -109,10 +129,6 @@ public class MainActivity extends AppCompatActivity implements IServiceable {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setOnServiceConnection(ServiceConnection onServiceConnection) {
-        this.onServiceConnection = onServiceConnection;
-    }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -127,9 +143,9 @@ public class MainActivity extends AppCompatActivity implements IServiceable {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            return position == 0 ? new GalleryFragment() :
-                    position == 1 ? MediaFragment.newInstance(false,0):
-                            position == 2 ? new MapFragment() : null;
+            return position == 0 ? galleryFragment:
+                    position == 1 ? mediaFragment:
+                            position == 2 ? mapFragment : null;
         }
 
         @Override

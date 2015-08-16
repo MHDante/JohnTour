@@ -1,6 +1,8 @@
 package ca.mixitmedia.johntour;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -21,8 +23,6 @@ public class TourService extends IntentService implements MediaPlayer.OnErrorLis
     }
 
     public void playSeqPt(SequencePoint sequencePoint, final OnPreparedListener OPL) {
-
-
             this.seqPt = sequencePoint;
             if (player!=null) player.release();
             player = new MediaPlayer();
@@ -44,7 +44,7 @@ public class TourService extends IntentService implements MediaPlayer.OnErrorLis
         try {
         videoMode = video;
         Uri mediaUri = Uri.parse("android.resource://" + getPackageName() + "/" + (videoMode?seqPt.getVideoResID():seqPt.getAudioResID()));
-        videoMode = true;
+        //videoMode = true;
             player.reset();
         player.setDataSource(this,mediaUri);
         player.setOnPreparedListener(OPL);

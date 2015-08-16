@@ -19,7 +19,7 @@ import ca.mixitmedia.johntour.MediaUtilViews.*;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MediaFragment extends Fragment {
+public class MediaFragment extends Fragment implements ServiceConnection {
 
     private static final String TAG = "MediaFragment";
     private static final String ARGS_KEY_SEQ_PT_ID = "SeqPtID";
@@ -35,42 +35,62 @@ public class MediaFragment extends Fragment {
     private FadingMediaControls fmc;
     private SurfaceHolder surfaceHolder;
     private static boolean lastAccessWasGallery;
+    private static boolean currentAccessIsGallery;
 
+    private boolean fromGallery;
+    private SequencePoint loadedSeqPt;
     public MediaFragment() {
     }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        IServiceable serviceable = (IServiceable) activity;
         mainActivity = activity;
         Bundle args = getArguments();
-        final SequencePoint loadedSeqPt;
-        final boolean fromGallery = lastAccessWasGallery = args.getBoolean(ARGS_KEY_FROM_GALLERY);
+        lastAccessWasGallery = currentAccessIsGallery;
+        fromGallery = currentAccessIsGallery = args.getBoolean(ARGS_KEY_FROM_GALLERY);
         if(fromGallery) loadedSeqPt = SequencePoint.list.get(args.getInt(ARGS_KEY_SEQ_PT_ID));
         else loadedSeqPt = SeqManager.getCurrentSeqPt();
 
-        serviceable.setOnServiceConnection(new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                final TourService tourService = ((TourService.TourServiceControl) service).getService();
-                if ((lastAccessWasGallery == fromGallery) && (tourService.player!=null && tourService.player.isPlaying())){
-                    if (mainActivity != null) attachPlayer(tourService.player, tourService);
-                }else {
-                    tourService.playSeqPt(loadedSeqPt, new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(final MediaPlayer mp) {
-                            if (mainActivity != null) attachPlayer(mp, tourService);
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-            }
-        });
     }
 
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        final TourService tourService = ((TourService.TourServiceControl) service).getService();
+        if ((lastAccessWasGallery == fromGallery) && (tourService.player!=null && tourService.player.isPlaying())){
+            if (mainActivity != null) attachPlayer(tourService.player, tourService);
+        }else {
+            tourService.playSeqPt(loadedSeqPt, new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(final MediaPlayer mp) {
+                    if (mainActivity != null) attachPlayer(mp, tourService);
+                }
+            });
+        }
+    }
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+    }
 
+    @Override
+    public void onPause() {
+        seekBar.onPause();
+        playPauseButton.onPause();
+        subsBox.onPause();
+        fmc.onPause();
+        super.onPause();
+
+    }
+
+    @Override
+    public void onResume() {
+
+        seekBar.onResume();
+        playPauseButton.onResume();
+        subsBox.onResume();
+        fmc.onResume();
+        super.onResume();
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,7 +137,7 @@ public class MediaFragment extends Fragment {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                mp.setDisplay(null);
+                //mp.setDisplay(null);
             }
         });
 

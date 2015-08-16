@@ -40,4 +40,6 @@
     <string name="title_activity_main" />
     <string name="LocNativeRelationsTitle" />
     <string name="locNativeRelationsTitle" />
+    <string name="action_update_picture">Update Picture</string>
+    <string name="action_show_on_map">Show on Map</string>
 </resources>

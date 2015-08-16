@@ -2,6 +2,8 @@ package ca.mixitmedia.johntour;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,10 +15,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class GalleryFragment extends Fragment {
+public class GalleryMasterFragment extends Fragment {
     private MainActivity mainActivity;
 
-    public GalleryFragment() {
+    public GalleryMasterFragment() {
     }
 
     @Override
@@ -29,8 +31,9 @@ public class GalleryFragment extends Fragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(mainActivity, "" + position,
-                        Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(mainActivity, GalleryDetailActivity.class);
+                i.putExtra(GalleryDetailActivity.ITEM_ID, position);
+                startActivity(i);
             }
         });
 

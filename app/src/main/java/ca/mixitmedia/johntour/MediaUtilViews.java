@@ -33,7 +33,11 @@ public class MediaUtilViews {
     private static final String TAG = "MediaUtilViews";
 
 
-    public static class FadingMediaControls extends LinearLayout implements Runnable{
+    public static interface LifeCyclable{
+        void onPause();
+        void onResume();
+    };
+    public static class FadingMediaControls extends LinearLayout implements Runnable, LifeCyclable{
 
         private static final int FADE_DURATION = 500;
         private static final int FADE_DELAY = 1000;
@@ -55,8 +59,12 @@ public class MediaUtilViews {
         private ViewPropertyAnimator animator;
         @Override
         public void run() {
-            boolean a, c, d;
-            a = player!=null && player.isPlaying();
+            boolean a = false, c, d;
+            try {
+                a = player != null && player.isPlaying();
+            }catch (Exception e){
+                Log.d(TAG, "wut");
+            }
             c= this.getVisibility() != View.GONE;
             d= animator == null;
 
@@ -107,9 +115,31 @@ public class MediaUtilViews {
         }
 
 
+        //@Override
+        //protected void onAttachedToWindow() {
+        //    super.onAttachedToWindow();
+        //    postDelayed(this, UPDATE_INTERVAL);
+        //    setOnClickListener(new OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            showControls();
+        //        }
+        //    });
+        //}
+//
+        //@Override
+        //protected void onDetachedFromWindow() {
+        //    super.onDetachedFromWindow();
+        //    removeCallbacks(this);
+        //}
+
         @Override
-        protected void onAttachedToWindow() {
-            super.onAttachedToWindow();
+        public void onPause() {
+            removeCallbacks(this);
+        }
+
+        @Override
+        public void onResume() {
             postDelayed(this, UPDATE_INTERVAL);
             setOnClickListener(new OnClickListener() {
                 @Override
@@ -118,14 +148,8 @@ public class MediaUtilViews {
                 }
             });
         }
-
-        @Override
-        protected void onDetachedFromWindow() {
-            super.onDetachedFromWindow();
-            removeCallbacks(this);
-        }
     }
-    public static class PlayPauseButton extends ImageButton implements Runnable{
+    public static class PlayPauseButton extends ImageButton implements Runnable, LifeCyclable{
         private MediaPlayer player;
 
         public PlayPauseButton(Context context) {
@@ -168,21 +192,31 @@ public class MediaUtilViews {
                             : android.R.drawable.ic_media_play);
             postDelayed(this, UPDATE_INTERVAL);
         }
+//
+//        @Override
+//        protected void onAttachedToWindow() {
+//            super.onAttachedToWindow();
+//            postDelayed(this, UPDATE_INTERVAL);
+//        }
+//
+//        @Override
+//        protected void onDetachedFromWindow() {
+//            super.onDetachedFromWindow();
+//            removeCallbacks(this);
+//        }
 
         @Override
-        protected void onAttachedToWindow() {
-            super.onAttachedToWindow();
-            postDelayed(this, UPDATE_INTERVAL);
+        public void onPause() {
+            removeCallbacks(this);
         }
 
         @Override
-        protected void onDetachedFromWindow() {
-            super.onDetachedFromWindow();
-            removeCallbacks(this);
+        public void onResume() {
+            postDelayed(this, UPDATE_INTERVAL);
         }
     }
 
-    public static class MediaSeekBar extends SeekBar implements Runnable{
+    public static class MediaSeekBar extends SeekBar implements Runnable, LifeCyclable{
 
         private MediaPlayer player;
         private float seekIncrementAmount;
@@ -208,18 +242,26 @@ public class MediaUtilViews {
             postDelayed(this, UPDATE_INTERVAL);
         }
 
+//        @Override
+//        protected void onAttachedToWindow() {
+//            super.onAttachedToWindow();
+//            postDelayed(this, UPDATE_INTERVAL);
+//        }
+//
+//        @Override
+//        protected void onDetachedFromWindow() {
+//            super.onDetachedFromWindow();
+//            removeCallbacks(this);
+//        }
         @Override
-        protected void onAttachedToWindow() {
-            super.onAttachedToWindow();
-            postDelayed(this, UPDATE_INTERVAL);
-        }
-
-        @Override
-        protected void onDetachedFromWindow() {
-            super.onDetachedFromWindow();
+        public void onPause() {
             removeCallbacks(this);
         }
 
+        @Override
+        public void onResume() {
+            postDelayed(this, UPDATE_INTERVAL);
+        }
 
         public void setPlayer(MediaPlayer mp) {
             this.player = mp;
@@ -244,7 +286,7 @@ public class MediaUtilViews {
         }
     }
 
-    public static class SubtitleView extends TextView implements Runnable {
+    public static class SubtitleView extends TextView implements Runnable, LifeCyclable {
         private static final String TAG = "SubtitleView";
         private static final boolean DEBUG = false;
         private MediaPlayer player;
@@ -289,16 +331,26 @@ public class MediaUtilViews {
                     (seconds % 3600) / 60, (seconds % 60), Locale.US);
         }
 
+//        @Override
+//        protected void onAttachedToWindow() {
+//            super.onAttachedToWindow();
+//            postDelayed(this, UPDATE_INTERVAL);
+//        }
+//
+//        @Override
+//        protected void onDetachedFromWindow() {
+//            super.onDetachedFromWindow();
+//            removeCallbacks(this);
+//        }
+
         @Override
-        protected void onAttachedToWindow() {
-            super.onAttachedToWindow();
-            postDelayed(this, UPDATE_INTERVAL);
+        public void onPause() {
+            removeCallbacks(this);
         }
 
         @Override
-        protected void onDetachedFromWindow() {
-            super.onDetachedFromWindow();
-            removeCallbacks(this);
+        public void onResume() {
+            postDelayed(this, UPDATE_INTERVAL);
         }
 
         public void setPlayer(MediaPlayer player) {
