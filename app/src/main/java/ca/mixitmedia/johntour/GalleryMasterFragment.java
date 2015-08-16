@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GalleryMasterFragment extends Fragment {
@@ -72,19 +74,24 @@ public class GalleryMasterFragment extends Fragment {
 
         // create a new ImageView for each item referenced by the Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView;
+            View itemView;
             if (convertView == null) {
                 // if it's not recycled, initialize some attributes
-                imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(8, 8, 8, 8);
+                itemView = LayoutInflater.from(mainActivity).inflate(R.layout.view_gallery_item,null);
+//                itemView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//                itemView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                itemView.setPadding(8, 8, 8, 8);
             } else {
-                imageView = (ImageView) convertView;
+                itemView =  convertView;
             }
 
-            imageView.setImageResource(SequencePoint.list.get(position).getBannerResID());
-            return imageView;
+            ((ImageView)itemView.findViewById(R.id.banner))
+                    .setImageResource(SequencePoint.list.get(position).getBannerResID());
+            ((TextView)itemView.findViewById(R.id.title))
+                    .setText(getResources().getString(SequencePoint.list.get(position).getNameResID()));
+
+
+            return itemView;
         }
     }
 
